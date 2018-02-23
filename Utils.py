@@ -4,6 +4,30 @@ from skimage import measure
 from skimage.measure import regionprops
 import cv2
 
+def is_movement(roi, background_average):
+    roi = cv2.GaussianBlur(roi, (21, 21), 0)
+
+    img_delta = cv2.absdiff(roi, background_average)
+
+    thresh = cv2.threshold(img_delta, 25, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.dilate(thresh, None, iterations=2)
+
+    image, contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    l_contour_areas = []
+
+    for c in contours:
+        l_contour_areas.append(cv2.contourArea(c))
+
+    if max(l_contour_areas) > 20000:
+        retval = True
+
+    else:
+        retval = False
+
+    background_average = (499*background_average/500 + roi/500).astype('uint8')
+
+    return retval, background_average
+
 
 def preprocess(img):
  
