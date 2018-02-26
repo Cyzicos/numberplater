@@ -31,7 +31,7 @@ while(True):
 
     if movement:
         print(movement)
-        binary_img = Utils.preprocess(roi)
+        binary_img = Utils.preprocess(roi,background_average)
         
         plate_like_objects, plate_objects_cordinates = Utils.findNumberPlate(binary_img[0])
         

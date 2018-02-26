@@ -19,18 +19,18 @@ def is_movement(roi, background_average):
         l_contour_areas.append(cv2.contourArea(c))
 
     print(max(l_contour_areas))
-    if max(l_contour_areas) > 150000:
+    if max(l_contour_areas) > 10000:
         retval = True
 
     else:
         retval = False
 
-    background_average = (background_average*0.999 + roi*0.001).astype('uint8')
+    background_average = (background_average*0.9999 + roi*0.0001).astype('uint8')
 
     return retval, background_average
 
 
-def preprocess(img):
+def preprocess(img,background_average):
  
     
     #additional img processing steps
@@ -38,12 +38,13 @@ def preprocess(img):
     #laplacian = cv2.Laplacian(img,cv2.CV_64F)
     
     
-    
+    img_delta = cv2.absdiff(img, background_average)
+
     #generating a threshold value for binarization of img
     threshold_value = threshold_otsu(img)
     #print(threshold_value)
     #binarization of image
-    binary_car_image = img > threshold_value
+    binary_car_image = img_delta > threshold_value
     
     return [binary_car_image, img]
 
