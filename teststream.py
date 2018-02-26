@@ -11,6 +11,7 @@ background_average = np.load("config/first_background_average.npy")
 
 cap = cv2.VideoCapture(stream_url)
 counter = 0
+movement = False
 
 
 
@@ -29,7 +30,7 @@ while(True):
     movement, background_average = Utils.is_movement(roi, background_average)
 
     if movement:
-        
+        print(movement)
         binary_img = Utils.preprocess(roi)
         
         plate_like_objects, plate_objects_cordinates = Utils.findNumberPlate(binary_img[0])
@@ -42,9 +43,9 @@ while(True):
             min_row, min_col, max_row, max_col = coordinate
             cv2.rectangle(roi,(min_col,min_row),(max_col,max_row),(255,0,0),3)
 
-            path = "outputpics/"+str(counter)+"_"+str(i)+".png"
-            cv2.imwrite(path, roi[min_row:max_row,min_col:max_col])
-            i=i+1
+            #path = "outputpics/"+str(counter)+"_"+str(i)+".png"
+            #cv2.imwrite(path, roi[min_row:max_row,min_col:max_col])
+            #i=i+1
     
 
     # Display the resulting frame
@@ -61,4 +62,4 @@ while(True):
 # When everything done, release the capture
 cap.release()
 cv2.destroyAllWindows()
-np.save("config/made_background_average.npy")
+np.save("config/made_background_average.npy", background_average)

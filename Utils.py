@@ -18,13 +18,14 @@ def is_movement(roi, background_average):
     for c in contours:
         l_contour_areas.append(cv2.contourArea(c))
 
-    if max(l_contour_areas) > 20000:
+    print(max(l_contour_areas))
+    if max(l_contour_areas) > 150000:
         retval = True
 
     else:
         retval = False
 
-    background_average = (499*background_average/500 + roi/500).astype('uint8')
+    background_average = (background_average*0.999 + roi*0.001).astype('uint8')
 
     return retval, background_average
 
